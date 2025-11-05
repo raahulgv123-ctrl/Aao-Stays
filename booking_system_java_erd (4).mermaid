@@ -1,0 +1,337 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#000','secondaryColor':'#fff','tertiaryColor':'#fff','background':'#fff','mainBkg':'#fff','secondBkg':'#fff','tertiaryBorderColor':'#000','tertiaryTextColor':'#000'}}}%%
+erDiagram
+    USER ||--o| GUEST : "is"
+    USER ||--o| HOST : "is"
+    USER ||--o| ADMIN : "is"
+    USER ||--o| EMPLOYEE : "is"
+    
+    HOST ||--o{ PROPERTY : "manages"
+    EMPLOYEE ||--o{ PROPERTY : "manages"
+    
+    GUEST ||--o{ BOOKING : "makes"
+    GUEST ||--o{ PAYMENT : "pays"
+    GUEST ||--o{ REVIEW : "writes"
+    GUEST ||--o{ WISHLIST : "has"
+    
+    PROPERTY ||--o{ ROOM : "has"
+    PROPERTY ||--|| CONTACT_DETAILS : "has"
+    PROPERTY ||--o{ PROPERTY_CATEGORY : "belongs_to"
+    PROPERTY ||--o{ PROPERTY_AMENITY : "has"
+    PROPERTY ||--o{ BOOKING : "receives"
+    PROPERTY ||--o{ REVIEW : "receives"
+    PROPERTY ||--o{ WISHLIST : "saved_in"
+    PROPERTY ||--o| DISCOUNT : "has"
+    
+    CATEGORY ||--o{ PROPERTY_CATEGORY : "contains"
+    AMENITY ||--o{ PROPERTY_AMENITY : "assigned_to"
+    
+    EMPLOYEE ||--o{ ROOM : "creates_updates_manages"
+    
+    ROOM ||--o{ ROOM_AMENITIES : "has"
+    ROOM ||--o| BOOKING : "booked_in"
+    
+    BOOKING ||--o{ BOOKING_GUEST : "for"
+    BOOKING ||--o{ PAYMENT : "has"
+    BOOKING ||--|| REVIEW : "has"
+    BOOKING }o--o| COUPON : "uses"
+    
+    USER ||--o{ NOTIFICATION : "receives"
+    
+    USER {
+        Long userId PK
+        String email UK
+        String fullName
+        String phoneNumber
+        String userType
+        String profilePictureUrl
+        LocalDate dateOfBirth
+        String address
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+    }
+    
+    GUEST {
+        Long guestId PK
+        Long userId FK
+        String preferredCurrency
+        String preferences
+        Integer totalBookings
+        BigDecimal totalSpent
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+    }
+    
+    HOST {
+        Long hostId PK
+        Long userId FK
+        String bio
+        String profilePicture
+        String languagesSpoken
+        Boolean isSuperhost
+        LocalDate hostSince
+        Boolean isVerified
+        String governmentIdType
+        String governmentIdNumber
+        Boolean idVerified
+        Integer totalProperties
+        BigDecimal totalEarnings
+        BigDecimal earningsPerMonth
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+    }
+    
+    ADMIN {
+        Long adminId PK
+        Long userId FK
+        String adminLevel
+        String permissions
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+    }
+    
+    EMPLOYEE {
+        Long employeeId PK
+        Long userId FK
+        String employeeRole
+        String employeeCode UK
+        LocalDate hireDate
+        BigDecimal salary
+        Boolean isActive
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+    }
+    
+    PROPERTY {
+        Long propertyId PK
+        Long hostId FK
+        Long employeeId FK
+        Long adminId FK
+        String propertyName
+        String categoryType
+        String description
+        String addressLine1
+        String city
+        String state
+        String country
+        String postalCode
+        BigDecimal latitude
+        BigDecimal longitude
+        String locationUrl
+        String mapEmbedUrl
+        Integer baseGuests
+        Integer maxGuests
+        Boolean extraGuestAllowed
+        BigDecimal extraGuestFee
+        Integer bedrooms
+        Integer Restrooms
+        String kitchenType
+        Boolean petsAllowed
+        BigDecimal pricePerNight
+        Boolean isActive
+        BigDecimal ratingAverage
+        Integer totalReviews
+        Integer totalBookings
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+    }
+    
+    CONTACT_DETAILS {
+        Long contactId PK
+        Long propertyId FK
+        String contactName
+        String email
+        String primaryMobile
+        String alternateMobile
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+    }
+    
+    CATEGORY {
+        Long categoryId PK
+        String categoryName UK
+        String categoryDescription
+        String categoryIcon
+        Boolean isActive
+        LocalDateTime createdAt
+    }
+    
+    PROPERTY_CATEGORY {
+        Long propertyCategoryId PK
+        Long propertyId FK
+        Long categoryId FK
+        LocalDateTime assignedAt
+    }
+    
+    AMENITY {
+        Long amenityId PK
+        String amenityName UK
+        String amenityDescription
+        String amenityCategory
+        String amenityIcon
+        Boolean isActive
+        LocalDateTime createdAt
+    }
+    
+    PROPERTY_AMENITY {
+        Long propertyAmenityId PK
+        Long propertyId FK
+        Long amenityId FK
+        Boolean isAvailable
+        LocalDateTime assignedAt
+    }
+    
+    ROOM {
+        Long roomId PK
+        Long propertyId FK
+        Long createdByEmployeeId FK
+        Long updatedByEmployeeId FK
+        String roomNumber
+        String roomType
+        String roomName
+        Integer baseGuests
+        Integer maxGuests
+        Boolean extraGuestAllowed
+        BigDecimal extraGuestFee
+        BigDecimal pricePerNight
+        String bedType
+        Integer bedCount
+        String roomStatus
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+    }
+    
+    ROOM_AMENITIES {
+        Long roomAmenityId PK
+        Long roomId FK
+        String amenityName
+        String amenityIcon
+        Boolean isAvailable
+    }
+    
+    BOOKING {
+        Long bookingId PK
+        Long propertyId FK
+        Long roomId FK
+        Long guestId FK
+        Long couponId FK
+        LocalDate checkInDate
+        LocalDate checkOutDate
+        Integer numberOfGuests
+        Integer numberOfNights
+        BigDecimal basePrice
+        BigDecimal extraGuestCharges
+        BigDecimal discountAmount
+        BigDecimal totalAmount
+        String bookingStatus
+        String specialRequests
+        String cancellationReason
+        LocalDateTime cancelledAt
+        Long cancelledBy FK
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+        LocalDateTime confirmedAt
+    }
+    
+    BOOKING_GUEST {
+        Long bookingGuestId PK
+        Long bookingId FK
+        String guestFullName
+        String guestEmail
+        String guestPhone
+        String guestIdProofType
+        String guestIdProofNumber
+        String relationshipToBooker
+        LocalDateTime createdAt
+    }
+    
+    COUPON {
+        Long couponId PK
+        String couponCode UK
+        String couponName
+        String description
+        String discountType
+        BigDecimal discountValue
+        BigDecimal maxDiscountAmount
+        BigDecimal minBookingAmount
+        LocalDate validFrom
+        LocalDate validUntil
+        Integer usageLimit
+        Integer usedCount
+        String applicableTo
+        Boolean isActive
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+    }
+    
+    DISCOUNT {
+        Long discountId PK
+        Long propertyId FK
+        String discountName
+        String discountType
+        BigDecimal discountPercentage
+        Integer minNightsRequired
+        LocalDate validFrom
+        LocalDate validUntil
+        Integer daysBeforeCheckin
+        Boolean isActive
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+    }
+    
+    PAYMENT {
+        Long paymentId PK
+        Long bookingId FK
+        Long guestId FK
+        BigDecimal amount
+        String paymentMethod
+        String paymentStatus
+        String transactionId UK
+        String paymentGateway
+        BigDecimal refundAmount
+        LocalDateTime refundDate
+        String refundReason
+        LocalDateTime paymentDate
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+    }
+    
+    REVIEW {
+        Long reviewId PK
+        Long bookingId FK
+        Long propertyId FK
+        Long guestId FK
+        BigDecimal overallRating
+        BigDecimal cleanlinessRating
+        BigDecimal accuracyRating
+        BigDecimal communicationRating
+        BigDecimal locationRating
+        BigDecimal valueRating
+        String reviewTitle
+        String reviewText
+        String hostResponse
+        LocalDateTime hostResponseDate
+        Boolean isVerified
+        Boolean isVisible
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+    }
+    
+    WISHLIST {
+        Long wishlistId PK
+        Long guestId FK
+        Long propertyId FK
+        LocalDateTime addedAt
+    }
+    
+    NOTIFICATION {
+        Long notificationId PK
+        Long userId FK
+        String notificationType
+        String title
+        String message
+        Boolean isRead
+        String relatedEntityType
+        Long relatedEntityId
+        LocalDateTime createdAt
+        LocalDateTime readAt
+    }
