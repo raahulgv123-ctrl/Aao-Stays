@@ -1,0 +1,197 @@
+classDiagram
+    class User {
+        -String userId
+        -String name
+        -String email
+        -String phone
+        -String password
+        -Date registrationDate
+        +register()
+        +login()
+        +updateProfile()
+        +viewBookingHistory()
+    }
+
+    class Guest {
+        -List~Booking~ bookings
+        -List~Review~ reviews
+        +searchProperty()
+        +makeBooking()
+        +cancelBooking()
+        +writeReview()
+        +addToWishlist()
+    }
+
+    class Host {
+        -List~Property~ properties
+        -String bankDetails
+        -float rating
+        +addProperty()
+        +updateProperty()
+        +removeProperty()
+        +viewBookings()
+        +respondToReview()
+    }
+
+    class Property {
+        -String propertyId
+        -String name
+        -String address
+        -String city
+        -String country
+        -PropertyType type
+        -String description
+        -List~String~ amenities
+        -List~Room~ rooms
+        -float rating
+        -int maxGuests
+        +updateDetails()
+        +addRoom()
+        +removeRoom()
+        +checkAvailability()
+        +calculatePrice()
+    }
+
+    class Room {
+        -String roomId
+        -String roomNumber
+        -RoomType type
+        -float pricePerNight
+        -int capacity
+        -boolean isAvailable
+        -List~String~ amenities
+        +updatePrice()
+        +setAvailability()
+        +getDetails()
+    }
+
+    class Booking {
+        -String bookingId
+        -Date checkInDate
+        -Date checkOutDate
+        -int numberOfGuests
+        -BookingStatus status
+        -float totalAmount
+        -Date bookingDate
+        +confirmBooking()
+        +cancelBooking()
+        +modifyBooking()
+        +calculateTotal()
+        +sendConfirmation()
+    }
+
+    class Payment {
+        -String paymentId
+        -float amount
+        -PaymentMethod method
+        -PaymentStatus status
+        -Date paymentDate
+        -String transactionId
+        +processPayment()
+        +refund()
+        +verifyPayment()
+        +generateInvoice()
+    }
+
+    class Review {
+        -String reviewId
+        -int rating
+        -String comment
+        -Date reviewDate
+        -List~String~ photos
+        -boolean isVerified
+        +submitReview()
+        +editReview()
+        +deleteReview()
+        +addPhotos()
+    }
+
+    class Notification {
+        -String notificationId
+        -String message
+        -Date sentDate
+        -NotificationType type
+        -boolean isRead
+        +send()
+        +markAsRead()
+    }
+
+    class Wishlist {
+        -String wishlistId
+        -List~Property~ properties
+        +addProperty()
+        +removeProperty()
+        +viewWishlist()
+    }
+
+    class PropertyType {
+        <<enumeration>>
+        HOTEL
+        APARTMENT
+        VILLA
+        GUESTHOUSE
+        HOSTEL
+    }
+
+    class RoomType {
+        <<enumeration>>
+        SINGLE
+        DOUBLE
+        SUITE
+        DELUXE
+        DORMITORY
+    }
+
+    class BookingStatus {
+        <<enumeration>>
+        PENDING
+        CONFIRMED
+        CANCELLED
+        COMPLETED
+        NO_SHOW
+    }
+
+    class PaymentMethod {
+        <<enumeration>>
+        CREDIT_CARD
+        DEBIT_CARD
+        UPI
+        NET_BANKING
+        WALLET
+    }
+
+    class PaymentStatus {
+        <<enumeration>>
+        PENDING
+        COMPLETED
+        FAILED
+        REFUNDED
+    }
+
+    class NotificationType {
+        <<enumeration>>
+        BOOKING_CONFIRMATION
+        PAYMENT_SUCCESS
+        CANCELLATION
+        REMINDER
+        PROMOTION
+    }
+
+    %% Inheritance relationships
+    User <|-- Guest
+    User <|-- Host
+
+    %% Associations
+    Guest "1" --> "*" Booking : makes
+    Host "1" --> "*" Property : owns
+    Property "1" --> "*" Room : contains
+    Booking "*" --> "1" Property : for
+    Booking "*" --> "*" Room : includes
+    Booking "1" --> "1" Payment : has
+    Guest "1" --> "*" Review : writes
+    Review "*" --> "1" Property : about
+    Host "1" --> "*" Review : receives
+    Guest "1" --> "*" Notification : receives
+    Host "1" --> "*" Notification : receives
+    Guest "1" --> "1" Wishlist : has
+    Wishlist "*" --> "*" Property : contains
